@@ -93,7 +93,7 @@ username_input.pack()
 pass_label = ttk.Label(form,text = "Password")
 pass_input = ttk.Entry(form)
 pass_label.config(font=fnt,background="#36393E",foreground="#D3D3D3")
-pass_input.config(font=fnt)
+pass_input.config(font=fnt,show="*")
 pass_label.pack()
 pass_input.pack()
 
@@ -250,13 +250,23 @@ crdir_button.place(x=800,y=60,width=150,height=40)
 
 def deleteDirectory():
     directory = dirname_input.get()
-    try:
-        msg = ftp.rmd(directory)
-        text_servermsg.insert(END,"\n")
-        text_servermsg.insert(END,msg)
-    except:
-        text_servermsg.insert(END,"\n")
-        text_servermsg.insert(END,"Unable to delete directory")
+    if directory == " " :
+        try:
+            msg = ftp.rmd(directory)
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,msg)
+        except:
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,"Unable to delete directory")
+    else:
+        directory = serverdir.get("active")
+        try:
+            msg = ftp.rmd(directory)
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,msg)
+        except:
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,"Unable to delete directory")
     displayDir()
 
 deldir_button = ttk.Button(form, text="Delete Directory",command=deleteDirectory)
@@ -299,13 +309,23 @@ downfile_button.place(x=600,y=391,width=150,height=40)
 
 def deleteFile():
     file = dirname_input.get()
-    try:
-        msg = ftp.delete(file)
-        text_servermsg.insert(END,"\n")
-        text_servermsg.insert(END,msg)
-    except:
-        text_servermsg.insert(END,"\n")
-        text_servermsg.insert(END,"Unable to delete file")
+    if file == " " :
+        try:
+            msg = ftp.delete(file)
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,msg)
+        except:
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,"Unable to delete file")
+    else:
+        file = serverdir.get("active")
+        try:
+            msg = ftp.delete(file)
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,msg)
+        except:
+            text_servermsg.insert(END,"\n")
+            text_servermsg.insert(END,"Unable to delete file") 
     displayDir()
 
 delfile_button = ttk.Button(form, text="Delete File", command=deleteFile)
