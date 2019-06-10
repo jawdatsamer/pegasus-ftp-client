@@ -117,13 +117,17 @@ text_servermsg.place(x=65,y=175,width=1200,height=130)
 
 def displayDir():
     serverdir.insert(0,"_______________________________________________________________________")
+    global dirlistfull
+    global dirlist
     dirlist = []
     dirlist = ftp.nlst()
+    dirlistfull = []
+    ftp.dir(dirlistfull.append)
     serverpath= ftp.pwd()
     serverdir.delete(0,last=END)
     serverpath_input.delete(0,last=END)
     serverpath_input.insert(END,serverpath)
-    for item in dirlist:
+    for item in dirlistfull:
         serverdir.insert(0, item)
 
 serverdir_label = tkinter.Label(form, text="Server Directory Path:")
@@ -178,8 +182,10 @@ def changeserverDirectory():
         displayDir()
     else :
         serverdirectory = serverdir.get("active")
+        res_num = dirlistfull.index(serverdirectory)
+        return_res_name = dirlist[res_num]
         try:
-            msg = ftp.cwd(serverdirectory)
+            msg = ftp.cwd(return_res_name)
             text_servermsg.insert(END,"\n")
             text_servermsg.insert(END,msg)
         except:
@@ -260,8 +266,10 @@ def deleteDirectory():
             text_servermsg.insert(END,"Unable to delete directory")
     else:
         directory = serverdir.get("active")
+        res_num = dirlistfull.index(directory)
+        return_res_name = dirlist[res_num]
         try:
-            msg = ftp.rmd(directory)
+            msg = ftp.rmd(return_res_name)
             text_servermsg.insert(END,"\n")
             text_servermsg.insert(END,msg)
         except:
@@ -292,12 +300,14 @@ upfile_button.place(x=600,y=350,width=150,height=40)
 
 def downloadFile():
     file = serverdir.get("active")
-    down = open("{}\{}".format(hostpath_input.get(),file), "wb")
+    res_num = dirlistfull.index(file)
+    return_res_name = dirlist[res_num]
+    down = open("{}\{}".format(hostpath_input.get(),return_res_name), "wb")
     try:
         text_servermsg.insert(END,"\n")
-        text_servermsg.insert(END,"Downloading " + file + "...")
+        text_servermsg.insert(END,"Downloading " + return_res_name + "...")
         text_servermsg.insert(END,"\n")
-        text_servermsg.insert(END,ftp.retrbinary("RETR " + file, down.write))
+        text_servermsg.insert(END,ftp.retrbinary("RETR " + return_res_name, down.write))
     except:
         text_servermsg.insert(END,"\n")
         text_servermsg.insert(END,"Unable to download file")
@@ -319,8 +329,10 @@ def deleteFile():
             text_servermsg.insert(END,"Unable to delete file")
     else:
         file = serverdir.get("active")
+        res_num = dirlistfull.index(file)
+        return_res_name = dirlist[res_num]
         try:
-            msg = ftp.delete(file)
+            msg = ftp.delete(return_res_name)
             text_servermsg.insert(END,"\n")
             text_servermsg.insert(END,msg)
         except:
